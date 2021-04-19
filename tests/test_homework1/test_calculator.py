@@ -1,4 +1,4 @@
-from calculator.calc import check_power_of_2
+from homework1.sample_project.calculator.calc import check_power_of_2
 
 
 def test_positive_case():
@@ -19,6 +19,3 @@ def test_zero_case():
 def test_negative_number_case():
     """Testing that a negative number is always not a power of 2"""
     assert not check_power_of_2(-1)
-    assert not check_power_of_2(-2)
-    assert not check_power_of_2(-7)
-    assert not check_power_of_2(-9)
