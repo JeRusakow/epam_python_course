@@ -16,7 +16,7 @@ def find_maximal_subarray_sum(nums: List[int], k: int) -> int:
     res = None
 
     for idx in range(len(nums) - k + 1):
-        subsum = sum(nums[idx:idx + k])
+        subsum = sum(nums[idx : idx + k])
         if res is None or res < subsum:
             res = subsum
 

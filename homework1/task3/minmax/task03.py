@@ -28,4 +28,3 @@ def find_maximum_and_minimum(file_name: str) -> Tuple[int, int]:
             if max_num is None or max_num < num:
                 max_num = num
     return max_num, min_num
-

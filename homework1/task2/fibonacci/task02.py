@@ -20,7 +20,7 @@ def check_fibonacci(data: Sequence[int]) -> bool:
     b = next(rev_iter)
 
     for item in rev_iter:
-        #print(f"debug {item}")
+        # print(f"debug {item}")
         c = a - b
         try:
             if c != item:
@@ -31,7 +31,7 @@ def check_fibonacci(data: Sequence[int]) -> bool:
             break
 
     while a >= 0 and b >= 0:
-        #print(f"a = {a}, b = {b}, c = {c}")
+        # print(f"a = {a}, b = {b}, c = {c}")
 
         c = a - b
 
@@ -41,8 +41,6 @@ def check_fibonacci(data: Sequence[int]) -> bool:
         a = b
         b = c
 
-
-
     return False
 
 
@@ -51,5 +49,6 @@ def main():
 
     print(check_fibonacci(data))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
