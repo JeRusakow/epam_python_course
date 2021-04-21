@@ -17,7 +17,8 @@ def test_cached_func_returns_the_same_as_original():
 
 def test_cached_func_called_only_once_on_the_same_data():
     """Tests if the original function is called only once,
-    while cached function ma y be called several times with the same args"""
+    while cached function may be called several times with the same args.
+    So we can be sure the previous result is really cached"""
     mock = Mock()
     mock.return_value = 15
     arguments = 10, 5
