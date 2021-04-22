@@ -30,8 +30,9 @@ def major_and_minor_elem(inp: List) -> Tuple[int, int]:
         else:
             elements_counter[elem] += 1
 
-    elements_counter = sorted(elements_counter.items(), key=lambda x: x[1])
+    sorted_elements = sorted(elements_counter.items(), key=lambda x: x[1])
+    # This is List of Tuple[int, int]
 
     # Since the presence of the most common element is guaranteed, further checks are redundant
 
-    return elements_counter[-1][0], elements_counter[0][0]
+    return sorted_elements[-1][0], sorted_elements[0][0]
