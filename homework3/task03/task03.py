@@ -19,7 +19,7 @@ class Filter:
 # positive_even.apply(range(100)) should return only even numbers from 0 to 99
 
 
-def make_filter(**keywords):
+def make_filter(**keywords) -> Filter:
     """
     Generates filter object for specified keywords
     """

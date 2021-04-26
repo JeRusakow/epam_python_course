@@ -15,7 +15,7 @@ def slow_calculate(value):
     return sum(struct.unpack("<" + "B" * len(data), data))
 
 
-def fasterned_voodoo_calc(proc_num=50):
+def fasterned_voodoo_calc(proc_num=50) -> int:
     """
     Uses multiprocessing.Pool to speed up voodoo calculations.
     Proc_num sets the number of non-preemptive processes performing the task.
