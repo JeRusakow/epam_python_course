@@ -15,26 +15,11 @@ def slow_calculate(value):
     return sum(struct.unpack("<" + "B" * len(data), data))
 
 
-def fasterned_voodoo_calc():
-    """Uses multiprocessing to speed up voodoo calculations"""
-    shared_value = mp.Value("i", 0)
+def fasterned_voodoo_calc(proc_num=50):
+    """
+    Uses multiprocessing.Pool to speed up voodoo calculations.
+    Proc_num sets the number of non-preemptive processes performing the task.
+    """
+    with mp.Pool(proc_num) as pool:
 
-    def worker(shared_val, call_arg):
-        """A worker for computing slow_calculate with a specific parameter.
-        Uses shared value to store result"""
-        res = slow_calculate(call_arg)
-
-        with shared_val.get_lock():
-            shared_val.value += res
-
-    processes = [
-        mp.Process(target=worker, args=(shared_value, val)) for val in range(501)
-    ]
-
-    for process in processes:
-        process.start()
-
-    for process in processes:
-        process.join()
-
-    return shared_value.value
+        return sum(pool.map(slow_calculate, [i for i in range(501)]))
