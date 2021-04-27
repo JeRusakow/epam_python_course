@@ -1,4 +1,5 @@
 from unittest.mock import patch
+from urllib.error import URLError
 
 from pytest import raises
 
@@ -30,7 +31,7 @@ def test_status_not_ok(fake_urlopen):
 
 @patch("urllib.request.urlopen")
 def test_url_error(fake_urlopen):
-    fake_urlopen.side_effect = TypeError("Some URL error")
+    fake_urlopen.side_effect = URLError("Some URL error")
 
     with raises(ValueError, match="Unreachable https://fake.adr"):
         count_dots_on_i("https://fake.adr")
