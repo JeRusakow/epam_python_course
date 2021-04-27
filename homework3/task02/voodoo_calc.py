@@ -10,10 +10,8 @@ import time
 # takes approx. 1020 sec and result is 1025932
 def slow_calculate(value):
     """Some weird voodoo magic calculations"""
-    print(f"Calc {value} started")
     time.sleep(random.randint(1, 3))
     data = hashlib.md5(str(value).encode()).digest()
-    print(f"Calc {value} ended")
     return sum(struct.unpack("<" + "B" * len(data), data))
 
 
