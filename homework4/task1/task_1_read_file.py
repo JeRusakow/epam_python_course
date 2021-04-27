@@ -30,6 +30,10 @@ import os
 
 
 def read_magic_number(path: str) -> bool:
+    """
+    Reads the first line of the file and returns True if it belongs to interval [1, 3).
+    In case of errors raises ValueError.
+    """
     if not os.path.isfile(path):
         raise ValueError("File does not exist")
 
