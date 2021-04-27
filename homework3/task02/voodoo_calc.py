@@ -19,8 +19,7 @@ def slow_calculate(value):
 
 def fasterned_voodoo_calc(subroutine_arg_size=10) -> int:
     """
-    Uses multiprocessing.Pool to speed up voodoo calculations.
-    Proc_num sets the number of non-preemptive processes performing the task.
+    Uses multiprocessing.Process to spawn processes each assigned a chunk of general argument array
     """
 
     def worker(shared_value: mp.Value, *args) -> None:
