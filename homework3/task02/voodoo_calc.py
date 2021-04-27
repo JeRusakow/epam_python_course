@@ -15,17 +15,18 @@ def slow_calculate(value):
     return sum(struct.unpack("<" + "B" * len(data), data))
 
 
+def worker(shared_value: mp.Value, *args) -> None:
+    for arg in args:
+        res = slow_calculate(arg)
+
+        with shared_value.get_lock():
+            shared_value.value += res
+
+
 def fasterned_voodoo_calc(subroutine_arg_size=10) -> int:
     """
     Uses multiprocessing.Process to spawn processes each assigned a chunk of general argument array
     """
-
-    def worker(shared_value: mp.Value, *args) -> None:
-        for arg in args:
-            res = slow_calculate(arg)
-
-            with shared_value.get_lock():
-                shared_value.value += res
 
     shared_var = mp.Value("i", 0)
 
