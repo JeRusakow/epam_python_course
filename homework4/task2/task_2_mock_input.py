@@ -30,6 +30,7 @@ from collections import Counter
 
 
 def count_dots_on_i(url: str) -> int:
+    """Returns the amount of letters 'i' in given Internet page, including ones in HTML code"""
     response = None
     try:
         response = urllib.request.urlopen(url)
