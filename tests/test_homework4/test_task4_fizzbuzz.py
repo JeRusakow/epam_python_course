@@ -6,5 +6,5 @@ def test_list_size():
 
 
 def test_correctness():
-    expected = ["1", "2", "fizz", "4", "buzz", "fizz", "7", "8", "fizz", "buzz"]
+    expected = ["1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz"]
     assert fizzbuzz(10) == expected

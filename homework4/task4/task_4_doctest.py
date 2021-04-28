@@ -37,13 +37,19 @@ def fizzbuzz(n: int) -> List[str]:
     and each one divisible buy 5 with 'buzz'
 
     >>> fizzbuzz(5)
-    ['1', '2', 'fizz', '4', 'buzz']
+    ['1', '2', 'Fizz', '4', 'Buzz']
 
     >>> fizzbuzz(10)
-    ['1', '2', 'fizz', '4', 'buzz', 'fizz', '7', '8', 'fizz', 'buzz']
+    ['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz']
 
     """
     return [
-        "fizz" if i % 3 == 0 else "buzz" if i % 5 == 0 else str(i)
+        "FizzBuzz"
+        if i % 15 == 0
+        else "Fizz"
+        if i % 3 == 0
+        else "Buzz"
+        if i % 5 == 0
+        else str(i)
         for i in range(1, n + 1)
     ]
