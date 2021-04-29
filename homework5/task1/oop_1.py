@@ -46,6 +46,15 @@ class Homework:
         self.deadline = datetime.timedelta(days=days_to_complete)
         self.created = datetime.datetime.now()
 
+    def __eq__(self, other):
+        if not isinstance(other, Homework):
+            return NotImplemented
+        return (
+            self.text == other.text
+            and self.deadline == other.deadline
+            and self.created == other.created
+        )
+
     def is_active(self) -> bool:
         return datetime.datetime.now() < self.created + self.deadline
 
