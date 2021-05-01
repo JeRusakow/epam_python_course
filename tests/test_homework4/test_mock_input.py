@@ -25,7 +25,7 @@ def test_normal_execution(fake_urlopen):
 def test_status_not_ok(fake_urlopen):
     fake_urlopen.return_value = FakeHTTPResponse(404, "This is fake content")
 
-    with raises(ValueError, match="Unreachable https://fake.adr"):
+    with raises(ValueError, match="Bad response code: 404"):
         count_dots_on_i("https://fake.adr")
 
 

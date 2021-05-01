@@ -38,7 +38,7 @@ def count_dots_on_i(url: str) -> int:
         raise ValueError(f"Unreachable {url}")
 
     if response.status != 200:
-        raise ValueError(f"Unreachable {url}")
+        raise ValueError(f"Bad response code: {response.status}")
 
     page = response.read().decode("utf-8")
 
