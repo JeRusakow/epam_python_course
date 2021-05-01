@@ -37,15 +37,12 @@ def read_magic_number(path: str) -> bool:
     if not os.path.isfile(path):
         raise ValueError("File does not exist")
 
-    datafile = open(path)
-    line = datafile.readline()
-    datafile.close()
-
-    print(f"Line: '{line}'")
+    line = ""
+    with open(path) as datafile:
+        line = datafile.readline()
 
     try:
         num = float(line)
-        print(f"num: {num}")
         return 1 <= num < 3
     except ValueError:
         raise ValueError("The first line is not a number")
