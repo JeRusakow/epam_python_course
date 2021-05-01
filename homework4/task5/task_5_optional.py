@@ -23,12 +23,9 @@ from typing import Generator, List
 
 
 def fizzbuzz(n: int) -> Generator[str, None, None]:
-    """Generates a Fizz-Buzz sequence of length n"""
-    fizzes = cycle(["", "", "Fizz"])
-    buzzes = cycle(["", "", "", "", "Buzz"])
-    numbers = (str(i) for i in range(1, n + 1))
+    """Generates a Fizz-Buzz sequence fo length n. Does not use itertools.cycle"""
+    fizzes = ["Fizz", "", ""]
+    buzzes = ["Buzz", "", "", "", ""]
 
-    fizzbuzz_seq = [(next(fizzes) + next(buzzes)) or num for num in numbers]
-
-    for elem in fizzbuzz_seq:
+    for elem in [(fizzes[i % 3] + buzzes[i % 5]) or str(i) for i in range(1, n + 1)]:
         yield elem
