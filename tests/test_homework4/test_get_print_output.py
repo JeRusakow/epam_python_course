@@ -9,8 +9,8 @@ from homework4.task3.task_3_get_print_output import my_precious_logger
 def test_stderr_write(fake_stderr, fake_stdout):
     message = "error: Some Error"
     my_precious_logger(message)
-    assert fake_stderr.called_once_with(message)
-    assert fake_stdout.not_called()
+    fake_stderr.assert_called_once_with(message)
+    fake_stdout.not_called()
 
 
 @patch("sys.stdout.write")
@@ -18,8 +18,8 @@ def test_stderr_write(fake_stderr, fake_stdout):
 def test_stdout_write(fake_stderr, fake_stdout):
     message = "hooray: No error!"
     my_precious_logger(message)
-    assert fake_stdout.called_once_with(message)
-    assert fake_stderr.not_called()
+    fake_stdout.assert_called_once_with(message)
+    fake_stderr.assert_not_called()
 
 
 @patch("sys.stderr.write")
@@ -32,5 +32,6 @@ def test_std_write_random_text(fake_stdout, fake_stderr):
     """
     message = "".join([chr(random.randint(48, 123)) for i in range(10)])
     my_precious_logger(message)
-    assert fake_stdout.called_once_with(message)
-    assert fake_stderr.not_called()
+
+    fake_stdout.assert_called_once_with(message)
+    fake_stderr.assert_not_called()
