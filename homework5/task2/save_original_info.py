@@ -33,6 +33,11 @@ def print_result(func):
 
 
 def info_transfer(func_from=None):
+    """
+    Transfers __doc__ and __name__ from func_from to a function being decorated. Also adds __original_func
+    attribute containing a link to func_from to it
+    """
+
     def transfer_deco(_func):
         def wrapper(*args, **kwargs):
             """This docstring must be redefined later"""
