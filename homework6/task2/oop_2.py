@@ -5,7 +5,7 @@
 использования как общую переменную
 
 
-1. Как то не правильно, что после do_homework мы возвращаем все тот же
+1. Как-то не правильно, что после do_homework мы возвращаем все тот же
 объект - будем возвращать какой-то результат работы (HomeworkResult)
 
 HomeworkResult принимает объект автора задания, принимает исходное задание
@@ -29,18 +29,18 @@ HomeworkResult принимает объект автора задания, пр
 4.
 Teacher
 Атрибут:
-    homework_done - структура с интерфейсом как в словаря, сюда поподают все
+    homework_done - структура с интерфейсом как в словаре, сюда попадают все
     HomeworkResult после успешного прохождения check_homework
-    (нужно гаранитровать остутствие повторяющихся результатов по каждому
+    (нужно гарантировать отсутствие повторяющихся результатов по каждому
     заданию), группировать по экземплярам Homework.
-    Общий для всех учителей. Вариант ипользования смотри в блоке if __main__...
+    Общий для всех учителей. Вариант использования смотри в блоке if __main__...
 Методы:
     check_homework - принимает экземпляр HomeworkResult и возвращает True если
     ответ студента больше 5 символов, так же при успешной проверке добавить в
     homework_done.
     Если меньше 5 символов - никуда не добавлять и вернуть False.
 
-    reset_results - если передать экземпряр Homework - удаляет только
+    reset_results - если передать экземпляр Homework - удаляет только
     результаты этого задания из homework_done, если ничего не передавать,
     то полностью обнулит homework_done.
 
@@ -51,6 +51,68 @@ PEP8 соблюдать строго.
 """
 import datetime
 from collections import defaultdict
+
+
+class DeadlineError(Exception):
+    pass
+
+
+class Human:
+    def __init__(self, first_name: str, last_name: str):
+        self.first_name = first_name
+        self.last_name = last_name
+
+
+class Homework:
+    def __init__(self, text: str, days_to_complete: int):
+        self.text = text
+        self.deadline = datetime.timedelta(days=days_to_complete)
+        self.created = datetime.datetime.now()
+
+    def is_active(self) -> bool:
+        return datetime.datetime.now() < self.created + self.deadline
+
+
+class Student(Human):
+    def do_homework(self, homework: Homework, solution: str):
+        if homework.is_active():
+            return HomeworkResult(self, homework, solution)
+        else:
+            raise DeadlineError("You are late")
+
+
+class HomeworkResult:
+    def __init__(self, author: Student, task: Homework, solution: str):
+        if not isinstance(task, Homework):
+            raise TypeError("You gave not a Homework object")
+
+        self.author = author
+        self.task = task
+        self.solution = solution
+        self.created = datetime.datetime.now()
+
+
+class Teacher(Human):
+    homework_done = defaultdict(list)
+
+    @staticmethod
+    def create_homework(text: str, days_to_complete: int):
+        return Homework(text, days_to_complete)
+
+    def check_homework(self, done_homework: HomeworkResult) -> bool:
+        if len(done_homework.solution) > 5:
+            Teacher.homework_done[done_homework.task].append(done_homework)
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def reset_results(target_homework=None) -> None:
+        if target_homework is None:
+            Teacher.homework_done = defaultdict(list)
+        else:
+            Teacher.homework_done[target_homework] = []
+
 
 if __name__ == "__main__":
     opp_teacher = Teacher("Daniil", "Shadrin")
