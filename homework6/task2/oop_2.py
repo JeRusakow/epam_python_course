@@ -54,27 +54,69 @@ from collections import defaultdict
 
 
 class DeadlineError(Exception):
+    """A simple Exception class. To tell a student that they are late."""
+
     pass
 
 
 class Human:
+    """A common parent class for Teacher and Student.
+
+    Args:
+        first_name: A Human's first name
+        last_name: A Human's last name
+
+    Attributes:
+        first_name: A Human's first name
+        last_name: A Human's last name
+    """
+
     def __init__(self, first_name: str, last_name: str):
         self.first_name = first_name
         self.last_name = last_name
 
 
 class Homework:
+    """A class to represent hometasks for students.
+
+    Args:
+        text: A task itself
+        days_to_complete: A term for the task to be completed
+
+    Attributes:
+        text (str): A task itself
+        deadline (timedelta): A term for the task to be accomplished
+        created (datetime): An exact time when the task was created
+    """
+
     def __init__(self, text: str, days_to_complete: int):
         self.text = text
         self.deadline = datetime.timedelta(days=days_to_complete)
         self.created = datetime.datetime.now()
 
     def is_active(self) -> bool:
+        """Checks if the time for completing the task is NOT over"""
         return datetime.datetime.now() < self.created + self.deadline
 
 
 class Student(Human):
-    def do_homework(self, homework: Homework, solution: str):
+    """A class to represent a student."""
+
+    def do_homework(self, homework: Homework, solution: str) -> "HomeworkResult":
+        """A method to simulate the student's efforts to accomplish the task
+
+        Args:
+            homework: The homework to be accomplished
+            solution: A solution which the student had come up with
+
+        Returns:
+            HomeworkResult instance, if the student is not late, otherwise raises
+            an exception
+
+        Raises:
+            DeadlineError
+        """
+
         if homework.is_active():
             return HomeworkResult(self, homework, solution)
         else:
@@ -82,6 +124,20 @@ class Student(Human):
 
 
 class HomeworkResult:
+    """A class to represent the result of student's efforts to accomplish the hometask.
+
+    Args:
+        author: A Student instance, who had done the homework
+        task: A Homework instance, which had been completed
+        solution: A student's solution for task
+
+    Attributes:
+        author (Student): A Student instance, who had done the homework
+        task (Homework): A Homework instance, which had been completed
+        solution (str): A student's solution for task
+        created (datetime): An exact time, when the task was solved
+    """
+
     def __init__(self, author: Student, task: Homework, solution: str):
         if not isinstance(task, Homework):
             raise TypeError("You gave not a Homework object")
@@ -93,25 +149,59 @@ class HomeworkResult:
 
 
 class Teacher(Human):
+    """A class to represent a students' teacher
+
+    Attributes:
+        homework_done (defaultdict): A dictionary storing lists of HomeworkResult
+            instances for each Homework. This is a static attribute.
+    """
+
     homework_done = defaultdict(list)
 
     @staticmethod
-    def create_homework(text: str, days_to_complete: int):
+    def create_homework(text: str, days_to_complete: int) -> Homework:
+        """Creates a homework instance. Static method.
+
+        Args:
+            text: A task's text
+            days_to_complete: An amount of days to complete the task
+
+        Returns:
+             Homework instance, constructed from above args
+        """
         return Homework(text, days_to_complete)
 
     def check_homework(self, done_homework: HomeworkResult) -> bool:
-        if len(done_homework.solution) > 5:
-            Teacher.homework_done[done_homework.task].append(done_homework)
-            return True
-        else:
-            return False
+        """Simulates the teacher's efforts to distinguish a properly completed task
+        from poorly completed one. If homework completed correctly, puts it into
+        collection of all completed homeworks homework_done.
 
-    @staticmethod
-    def reset_results(target_homework=None) -> None:
+        Args:
+            done_homework: A HomeworkResult instance being evaluated
+
+        Returns:
+            True if homework completed properly, otherwise False
+        """
+        if len(done_homework.solution) > 5:
+            self.homework_done[done_homework.task].append(done_homework)
+            return True
+
+        return False
+
+    @classmethod
+    def reset_results(cls, target_homework=None) -> None:
+        """Cleans the homework_done collection.
+        If target_homework specified, cleans results of this homework. If not,
+        clears the entire collection.
+
+        Args:
+             target_homework (Homework): A Homework which results are to be cleaned.
+                Can be None.
+        """
         if target_homework is None:
-            Teacher.homework_done = defaultdict(list)
-        else:
-            Teacher.homework_done[target_homework] = []
+            cls.homework_done.clear()
+
+        cls.homework_done[target_homework] = []
 
 
 if __name__ == "__main__":
@@ -130,16 +220,17 @@ if __name__ == "__main__":
     try:
         result_4 = HomeworkResult(good_student, "fff", "Solution")
     except Exception:
-        print("There was an exception here")
+        print("There was an exception here")  # noqa
     opp_teacher.check_homework(result_1)
     temp_1 = opp_teacher.homework_done
 
     advanced_python_teacher.check_homework(result_1)
     temp_2 = Teacher.homework_done
-    assert temp_1 == temp_2
+    assert temp_1 == temp_2  # noqa
 
     opp_teacher.check_homework(result_2)
     opp_teacher.check_homework(result_3)
 
-    print(Teacher.homework_done[oop_hw])
+    print(Teacher.homework_done[oop_hw])  # noqa
+    print(Teacher.homework_done[docs_hw])  # noqa
     Teacher.reset_results()

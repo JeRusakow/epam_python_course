@@ -12,30 +12,37 @@ reset_instances_counter - сбросить счетчик экземпляров
 
 def instances_counter(cls):
     """
-    Adds two methods:
-    get_created_instances # returns the amount of created class instances
-    reset_instance_counter # resets the instance counter and returns the amount before resetting
+    Adds private _instance_counter property to a class along with two methods:
+
+    get_created_instances - returns the amount of created class instances
+    reset_instance_counter - resets the instance counter and returns the
+        amount before resetting
     """
 
-    original_init = getattr(cls, "__init__")
+    original_init = cls.__init__
 
-    setattr(cls, "instance_counter", 0)
+    cls.__instance_counter = 0
 
     def modified_init(self, *args, **kwargs):
-        cls.instance_counter += 1
+        """Modified __init__ method. Takes the same arguments as original one"""
+        cls.__instance_counter += 1
         return original_init(self, *args, **kwargs)
 
-    def get_created_instances(self=None):
-        return cls.instance_counter
+    @classmethod
+    def get_created_instances(cls_) -> int:
+        """Returns the amount of created class instances"""
+        return cls_.__instance_counter
 
-    def reset_instances_counter(self=None):
-        res = cls.instance_counter
-        cls.instance_counter = 0
-        return res
+    @classmethod
+    def reset_instances_counter(cls_) -> int:
+        """Forcibly sets the amount of created class instances to zero"""
+        res = cls_.__instance_counter
+        cls_.__instance_counter = 0
+        return res  # noqa
 
-    setattr(cls, "__init__", modified_init)
-    setattr(cls, "get_created_instances", get_created_instances)
-    setattr(cls, "reset_instances_counter", reset_instances_counter)
+    cls.__init__ = modified_init
+    cls.get_created_instances = get_created_instances
+    cls.reset_instances_counter = reset_instances_counter
 
     return cls
 
@@ -47,7 +54,7 @@ class User:
 
 if __name__ == "__main__":
 
-    print(User.get_created_instances())  # 0
+    print(User.get_created_instances())  # noqa # 0
     user, _, _ = User(), User(), User()
-    print(user.get_created_instances())  # 3
-    print(user.reset_instances_counter())  # 3
+    print(user.get_created_instances())  # noqa # 3
+    print(user.reset_instances_counter())  # noqa # 3
