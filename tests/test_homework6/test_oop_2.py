@@ -87,14 +87,12 @@ def test_teacher_generates_proper_homeworks(date_01_jan_2020):
         assert homework_from_teacher.deadline == proper_deadline
 
 
-def test_create_homework_result_from_not_a_homework(
-    test_homework, test_student, date_01_jan_2020
-):
+def test_create_homework_result_from_not_a_homework(test_student, date_01_jan_2020):
     with unittest.mock.patch("datetime.datetime") as fake_datetime:
         fake_datetime.now.return_value = date_01_jan_2020
 
         with pytest.raises(TypeError, match="You gave not a Homework object"):
-            HomeworkResult(test_student, test_homework, "Some solution")
+            HomeworkResult(test_student, "", "Some solution")
 
 
 def test_check_homework_returns_false_on_poor_homework(test_student):
