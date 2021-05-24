@@ -27,5 +27,5 @@ def test_unfinished_game():
 
 
 def test_draw():
-    brd = [["o", "x", "o"], ["x", "o", "o"], ["o", "x", "x"]]
+    brd = [["o", "x", "o"], ["o", "x", "x"], ["x", "o", "o"]]
     assert tic_tac_toe_checker(brd) == "draw!"
