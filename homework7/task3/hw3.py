@@ -23,10 +23,21 @@ from typing import List
 
 
 def tic_tac_toe_checker(board: List[List]) -> str:
+    """
+    Checks the tic-tac-toe board for winners
+
+    Args:
+        board: a 3 x 3 matrix representing a tic-tac-toe board
+
+    Returns:
+        "x wins!" or "o wins!" if there are winners
+        "unfinished!" if there are empty cells
+        "draw!" if all the cells are filled but there is no winner
+    """
     # generating array of indices to check
-    indices_arr = [tuple(tuple(i, j) for i in range(3)) for j in range(3)]
-    indices_arr.append(tuple(tuple(i, i) for i in range(3)))
-    indices_arr.append(tuple(tuple(i, 3 - i) for i in range(3)))
+    indices_arr = [tuple((i, j) for i in range(3)) for j in range(3)]
+    indices_arr.append(tuple((i, i) for i in range(3)))
+    indices_arr.append(tuple((i, 2 - i) for i in range(3)))
 
     for (x0, y0), (x1, y1), (x2, y2) in indices_arr:
         if board[x0][y0] == board[x1][y1] == board[x2][y2]:
