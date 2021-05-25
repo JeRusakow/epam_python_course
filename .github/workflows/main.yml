@@ -3,7 +3,9 @@
 name: CI
 
 on: 
-  push
+  push:
+    branches:
+      - hw*
 
 jobs:
   run_tests:
