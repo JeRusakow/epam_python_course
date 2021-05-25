@@ -40,9 +40,10 @@ def tic_tac_toe_checker(board: List[List]) -> str:
     indices_arr.append(tuple((i, 2 - i) for i in range(3)))
 
     for (x0, y0), (x1, y1), (x2, y2) in indices_arr:
+        # Straightforward check
         if board[x0][y0] == board[x1][y1] == board[x2][y2]:
             return f"{board[x0][y0]} wins!"
-
+        # Reflected check
         if board[y0][x0] == board[y1][x1] == board[y2][x2]:
             return f"{board[y0][x0]} wins!"
 
