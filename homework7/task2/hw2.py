@@ -21,8 +21,30 @@ Examples:
 from typing import List
 
 
-def backspace_compare(first: str, second: str):
+def backspace_compare(first: str, second: str) -> bool:  # noqa: CCR001
+    """
+    Compares two strings as if they were printed into text editor.
+
+    Args:
+        first: A string which should rather be understood as a command flow.
+            Each letter means a key pressed, "#" means backspace.
+        second: The same as first
+
+    Returns:
+        True, if both command flow cause the same text to appear on the editor,
+            false otherwise
+    """
+
     def simulate_text_editor(commands: str) -> List[str]:
+        """
+        Simulates text editor behaviour
+
+        Args:
+            commands: a flow of keys pressed
+
+        Returns:
+            A string that will appear on the screen presented as a list of chars
+        """
         text_on_the_screen = []
 
         for i in commands:
