@@ -2,8 +2,7 @@
 
 name: CI
 
-on:
-  push
+on: push
 
 jobs:
   run_tests:
@@ -12,9 +11,10 @@ jobs:
     name: Run tests
 
     steps:
+      - name: Checkuot code
       - uses: actions/checkout@v2
 
       - name: Run tests with pytest
         run: |
-          pip install pytest
+          pip install -r requirements.txt
           pytest tests
