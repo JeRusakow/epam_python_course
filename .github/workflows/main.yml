@@ -5,8 +5,7 @@ name: CI
 on: 
   push:
     branches:
-      - hw7
-      - hw6
+      - '**'
 
 jobs:
   run_tests:
