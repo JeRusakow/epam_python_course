@@ -17,7 +17,7 @@ class KeyValueStorage:
         ValueError: if 'key' is an inappropriate name to be an attribute
     """
 
-    def __init__(self, filename):  # noqa: CCR001
+    def __init__(self, filename: str):  # noqa: CCR001
         self._storage = {}
 
         with open(filename) as file:
