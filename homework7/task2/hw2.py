@@ -40,8 +40,8 @@ def backspace_compare(first: str, second: str) -> bool:  # noqa: CCR001
         Simulates text editor behaviour
 
         Args:
-            commands: a flow of keys pressed
-
+            commands: A flow of keys pressed. Consisits of letters and '#' signs.
+                '#' sign means 'Backspase' pressed.
         Returns:
             A string that will appear on the screen presented as a list of chars
         """
