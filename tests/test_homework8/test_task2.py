@@ -5,8 +5,8 @@ books = TableData("example.sqlite", "books")
 
 
 def test_len():
-    assert len(presidents) == 3
     assert len(books) == 3
+    assert len(presidents) == 3
 
 
 def test_access_by_key():
