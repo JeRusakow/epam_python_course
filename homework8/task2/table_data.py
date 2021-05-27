@@ -17,11 +17,12 @@ class TableData(Collection):
         self._table_name = table_name
 
     def __len__(self) -> int:
-        cursor = self._conn.execute("select count(*) from ?", (self._table_name,))
+        cursor = self._conn.cursor()
+        cursor.execute(f"select count(*) from {self._table_name}")  # noqa: S608
         return cursor.fetchone()[0]
 
     def __iter__(self) -> Iterator[sqlite3.Row]:
-        cursor = self._conn.execute("select * from ?", (self._table_name,))
+        cursor = self._conn.execute(f"select * from {self._table_name}")  # noqa: S608
         data = cursor.fetchone()
         while data is not None:
             yield data
@@ -29,13 +30,13 @@ class TableData(Collection):
 
     def __contains__(self, __x: object) -> bool:
         cursor = self._conn.execute(
-            "select * from ? {} where name=?", (self._table_name, __x)
+            f"select * from {self._table_name} where name = ?", (__x,)  # noqa: S608
         )
         data = cursor.fetchone()
         return data is not None
 
     def __getitem__(self, item: str) -> sqlite3.Row:
         cursor = self._conn.execute(
-            "select * from ? where name=?", (self._table_name, item)
+            f"select from {self._table_name} where name= ?", (item,)  # noqa: S608
         )
         return cursor.fetchone()

@@ -18,21 +18,21 @@ class KeyValueStorage:
     """
 
     def __init__(self, filename: str):  # noqa: CCR001
-        self._storage = {}
+        self.__storage = {}
 
         with open(filename) as file:
             for line in file:
                 splitted = line.rstrip("\n").split(sep="=", maxsplit=1)
                 try:
-                    self._storage[splitted[0]] = int(splitted[1])
+                    self.__storage[splitted[0]] = int(splitted[1])
                 except ValueError:
-                    self._storage[splitted[0]] = splitted[1]
+                    self.__storage[splitted[0]] = splitted[1]
 
-        for key, value in self._storage.items():
+        for key, value in self.__storage.items():
             if not re.match(r"_*[a-zA-Z]+[a-zA-Z0-9_]*", key):
                 raise ValueError(f"Key '{key}' cannot be an attribute name!")
             if key not in self.__dict__:
                 self.__setattr__(key, value)
 
     def __getitem__(self, item):
-        return self._storage[item]
+        return self.__storage[item]
