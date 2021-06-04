@@ -1,3 +1,5 @@
+import pytest
+
 from homework8.task2.table_data import TableData
 
 presidents = TableData("example.sqlite", "presidents")
@@ -25,3 +27,9 @@ def test_iteration_loops():
     president_list = [president["name"] for president in presidents]
     expected_presidents = ["Yeltsin", "Trump", "Big Man Tyrone"]
     assert president_list == expected_presidents
+
+
+def test_incorrect_identifier():
+    injection = "null; drop table presidents; --"
+    with pytest.raises(ValueError, match=f"Table name '{injection}' is incorrect!"):
+        TableData("example.sqlite", injection)

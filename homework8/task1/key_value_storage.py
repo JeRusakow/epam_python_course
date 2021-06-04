@@ -1,3 +1,4 @@
+import os
 import re
 
 
@@ -20,19 +21,32 @@ class KeyValueStorage:
     def __init__(self, filename: str):  # noqa: CCR001
         self.__storage = {}
 
+        if not os.path.exists(filename):
+            raise FileNotFoundError(f"File '{filename}' does not exists!")
+
         with open(filename) as file:
             for line in file:
                 splitted = line.rstrip("\n").split(sep="=", maxsplit=1)
-                try:
-                    self.__storage[splitted[0]] = int(splitted[1])
-                except ValueError:
-                    self.__storage[splitted[0]] = splitted[1]
 
-        for key, value in self.__storage.items():
-            if not re.match(r"_*[a-zA-Z]+[a-zA-Z0-9_]*", key):
-                raise ValueError(f"Key '{key}' cannot be an attribute name!")
-            if key not in self.__dict__:
-                self.__setattr__(key, value)
+                if re.match(r"^_*[a-zA-Z]+[a-zA-Z0-9_]*$", splitted[0]):
+                    try:
+                        self.__storage[splitted[0]] = int(splitted[1])
+                    except ValueError:
+                        self.__storage[splitted[0]] = splitted[1]
+                else:
+                    raise ValueError(
+                        f"Key '{splitted[0]}' cannot be an attribute name!"
+                    )
 
     def __getitem__(self, item):
         return self.__storage[item]
+
+    def __getattr__(self, item):
+        try:
+            return self.__storage[item]
+        except KeyError:
+            raise AttributeError
+
+
+class Some:
+    pass
