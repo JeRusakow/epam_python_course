@@ -19,7 +19,7 @@ Example:
      Return value should be "x wins!"
 
 """
-from typing import List
+from typing import List, Generator, Tuple
 
 
 def tic_tac_toe_checker(board: List[List]) -> str:
@@ -27,27 +27,51 @@ def tic_tac_toe_checker(board: List[List]) -> str:
     Checks the tic-tac-toe board for winners
 
     Args:
-        board: a 3 x 3 matrix representing a tic-tac-toe board
+        board: a square matrix representing a tic-tac-toe board, filled with 'x', 'o'
+            or '-'.
 
     Returns:
         "x wins!" or "o wins!" if there are winners
         "unfinished!" if there are empty cells
         "draw!" if all the cells are filled but there is no winner
     """
-    # generating array of indices to check
-    indices_arr = [tuple((i, j) for i in range(3)) for j in range(3)]
-    indices_arr.append(tuple((i, i) for i in range(3)))
-    indices_arr.append(tuple((i, 2 - i) for i in range(3)))
+    def win_lines_gen(board_size: int) -> Generator[Tuple[int, int], None, None]:
+        """
+        A generator of win-lines to check
 
-    for (x0, y0), (x1, y1), (x2, y2) in indices_arr:
-        # Straightforward check
-        if board[x0][y0] == board[x1][y1] == board[x2][y2]:
-            return f"{board[x0][y0]} wins!"
-        # Reflected check
-        if board[y0][x0] == board[y1][x1] == board[y2][x2]:
-            return f"{board[y0][x0]} wins!"
+        Args:
+            board_size: the size of a square-shaped board
 
-    if "-" in [i for j in board for i in j]:
+        Returns: A generator of win-line generators. A win-line generator yields
+            tuples of coordinates for a certain win-line
+        """
+
+        # horizontal/vertical sweep
+        for i in range(board_size):
+            yield ((i, j) for j in range(board_size))
+            yield ((j, i) for j in range(board_size))
+
+        # main diagonal
+        yield ((i, i) for i in range(board_size))
+        # side diagonal
+        yield ((i, board_size - i - 1) for i in range(board_size))
+
+    for win_line in win_lines_gen(len(board)):
+        x_wins = True
+        o_wins = True
+
+        for x, y in win_line:
+            if board[x][y] != "x":
+                x_wins = False
+            if board[x][y] != "o":
+                o_wins = False
+
+        if x_wins:
+            return "x wins!"
+        if o_wins:
+            return "o wins!"
+
+    if "-" in (i for j in board for i in j):
         return "unfinished!"
 
     return "draw!"

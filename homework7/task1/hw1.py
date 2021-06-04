@@ -44,7 +44,7 @@ def find_occurrences(tree: dict, element: Any) -> int:
         against too nested collection.
     """
     if isinstance(tree, dict):
-        return sum([find_occurrences(i, element) for _, i in tree.items()])
+        return sum([find_occurrences(i, element) for i in tree.values()])
 
     # Element found!
     if tree == element:

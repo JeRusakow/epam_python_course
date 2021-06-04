@@ -18,7 +18,8 @@ Examples:
     Explanation: s becomes "c" while t becomes "b".
 
 """
-from typing import List
+from typing import Generator
+from itertools import zip_longest
 
 
 def backspace_compare(first: str, second: str) -> bool:  # noqa: CCR001
@@ -35,27 +36,31 @@ def backspace_compare(first: str, second: str) -> bool:  # noqa: CCR001
             false otherwise
     """
 
-    def simulate_text_editor(commands: str) -> List[str]:
+    def simulate_text_editor(commands: str) -> Generator[str, None, None]:
         """
         Simulates text editor behaviour
 
         Args:
             commands: A flow of keys pressed. Consisits of letters and '#' signs.
-                '#' sign means 'Backspase' pressed.
+                '#' sign means 'Backspace' pressed.
         Returns:
-            A string that will appear on the screen presented as a list of chars
+            A generator yielding chars in text editor window in reversed order
         """
-        text_on_the_screen = []
+        chars_to_skip = 0
 
-        for i in commands:
-            if i != "#":
-                text_on_the_screen.append(i)
-            else:
-                try:
-                    text_on_the_screen.pop()
-                except IndexError:
-                    pass
+        for char in reversed(commands):
+            if char == "#":
+                chars_to_skip += 1
+                continue
 
-        return text_on_the_screen
+            if chars_to_skip > 0:
+                chars_to_skip -= 1
+                continue
 
-    return simulate_text_editor(first) == simulate_text_editor(second)
+            yield char
+
+    for char1, char2 in zip_longest(simulate_text_editor(first), simulate_text_editor(second)):
+        if char1 != char2:
+            return False
+
+    return True
