@@ -32,32 +32,40 @@ def test_draw():
 
 
 def test_x_wins_larger_board():
-    brd = [["x", "x", "-", "o"],
-           ["o", "x", "o", "o"],
-           ["o", "x", "o", "x"],
-           ["o", "x", "o", "-"]]
+    brd = [
+        ["x", "x", "-", "o"],
+        ["o", "x", "o", "o"],
+        ["o", "x", "o", "x"],
+        ["o", "x", "o", "-"],
+    ]
     assert tic_tac_toe_checker(brd) == "x wins!"
 
 
 def test_o_wins_larger_board():
-    brd = [["x", "x", "-", "o"],
-           ["o", "-", "o", "o"],
-           ["x", "o", "x", "x"],
-           ["o", "x", "o", "-"]]
+    brd = [
+        ["x", "x", "-", "o"],
+        ["o", "-", "o", "o"],
+        ["x", "o", "x", "x"],
+        ["o", "x", "o", "-"],
+    ]
     assert tic_tac_toe_checker(brd) == "o wins!"
 
 
 def test_unfinished_game_larger_board():
-    brd = [["x", "x", "-", "o"],
-           ["o", "-", "x", "o"],
-           ["x", "o", "x", "x"],
-           ["o", "x", "o", "-"]]
+    brd = [
+        ["x", "x", "-", "o"],
+        ["o", "-", "x", "o"],
+        ["x", "o", "x", "x"],
+        ["o", "x", "o", "-"],
+    ]
     assert tic_tac_toe_checker(brd) == "unfinished!"
 
 
 def test_draw_larger_board():
-    brd = [["x", "x", "x", "o"],
-           ["o", "o", "x", "o"],
-           ["x", "x", "x", "o"],
-           ["o", "x", "o", "x"]]
+    brd = [
+        ["x", "x", "x", "o"],
+        ["o", "o", "x", "o"],
+        ["x", "x", "x", "o"],
+        ["o", "x", "o", "x"],
+    ]
     assert tic_tac_toe_checker(brd) == "draw!"

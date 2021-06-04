@@ -19,10 +19,10 @@ Example:
      Return value should be "x wins!"
 
 """
-from typing import List, Generator, Tuple
+from typing import Generator, List, Tuple
 
 
-def tic_tac_toe_checker(board: List[List]) -> str:
+def tic_tac_toe_checker(board: List[List]) -> str:  # noqa: CCR001
     """
     Checks the tic-tac-toe board for winners
 
@@ -35,6 +35,7 @@ def tic_tac_toe_checker(board: List[List]) -> str:
         "unfinished!" if there are empty cells
         "draw!" if all the cells are filled but there is no winner
     """
+
     def win_lines_gen(board_size: int) -> Generator[Tuple[int, int], None, None]:
         """
         A generator of win-lines to check
