@@ -1,3 +1,4 @@
+import os
 import re
 import sqlite3
 from typing import Collection, Iterator
@@ -13,6 +14,9 @@ class TableData(Collection):
     """
 
     def __init__(self, database_name: str, table_name: str):
+        if not os.path.exists(database_name):
+            raise FileNotFoundError(f"Database not found at '{database_name}!")
+
         if not re.match(r"^[_a-zA-Z]+[_a-zA-Z09]$", table_name):
             raise ValueError(f"Table name '{table_name}' is incorrect!")
 

@@ -1,9 +1,13 @@
+import random
+
 import pytest
 
 from homework8.task2.table_data import TableData
 
-presidents = TableData("example.sqlite", "presidents")
-books = TableData("example.sqlite", "books")
+path_to_database = "tests/test_homework8/example.sqlite"
+
+presidents = TableData("tests/test_homework8/example.sqlite", "presidents")
+books = TableData("tests/test_homework8/example.sqlite", "books")
 
 
 def test_len():
@@ -32,4 +36,15 @@ def test_iteration_loops():
 def test_incorrect_identifier():
     injection = "null; drop table presidents; --"
     with pytest.raises(ValueError, match=f"Table name '{injection}' is incorrect!"):
-        TableData("example.sqlite", injection)
+        TableData(path_to_database, injection)
+
+
+def test_unexistent_database():
+    database_name = "".join(
+        (chr(random.randint(97, 122)) for _ in range(10))  # noqa: S311
+    )
+    database_name = f"{database_name}.sqlite"
+    with pytest.raises(
+        FileNotFoundError, match=f"Database not found at '{database_name}!"
+    ):
+        TableData(database_name, "some_table")
