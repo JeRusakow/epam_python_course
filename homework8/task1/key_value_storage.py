@@ -1,5 +1,5 @@
 import os
-import re
+from keyword import iskeyword
 
 
 class KeyValueStorage:
@@ -28,10 +28,10 @@ class KeyValueStorage:
             for line in file:
                 splitted = line.rstrip("\n").split(sep="=", maxsplit=1)
 
-                if re.match(r"^_*[a-zA-Z]+[a-zA-Z0-9_]*$", splitted[0]):
-                    try:
+                if splitted[0].isidentifier() and not iskeyword(splitted[0]):
+                    if splitted[1].isnumeric():
                         self.__storage[splitted[0]] = int(splitted[1])
-                    except ValueError:
+                    else:
                         self.__storage[splitted[0]] = splitted[1]
                 else:
                     raise ValueError(
