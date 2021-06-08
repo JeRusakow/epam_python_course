@@ -26,17 +26,15 @@ class KeyValueStorage:
 
         with open(filename) as file:
             for line in file:
-                splitted = line.rstrip("\n").split(sep="=", maxsplit=1)
+                key, value = line.rstrip("\n").split(sep="=", maxsplit=1)
 
-                if splitted[0].isidentifier() and not iskeyword(splitted[0]):
-                    if splitted[1].isnumeric():
-                        self.__storage[splitted[0]] = int(splitted[1])
+                if key.isidentifier() and not iskeyword(key):
+                    if value.isnumeric():
+                        self.__storage[key] = int(value)
                     else:
-                        self.__storage[splitted[0]] = splitted[1]
+                        self.__storage[key] = value
                 else:
-                    raise ValueError(
-                        f"Key '{splitted[0]}' cannot be an attribute name!"
-                    )
+                    raise ValueError(f"Key '{key}' cannot be an attribute name!")
 
     def __getitem__(self, item):
         return self.__storage[item]

@@ -30,8 +30,8 @@ class TableData(Collection):
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             yield cursor
-        finally:
             conn.commit()
+        finally:
             conn.close()
 
     def __len__(self) -> int:
@@ -41,10 +41,9 @@ class TableData(Collection):
 
     def __iter__(self) -> Iterator[sqlite3.Row]:
         with self.__open_connection() as cursor:
-            cursor.execute(f"select * from {self.__table_name}")  # noqa: S608
-
-            while data := cursor.fetchone():
-                yield data
+            yield from cursor.execute(
+                f"select * from {self.__table_name}"  # noqa: S608
+            )
 
     def __contains__(self, x: str) -> bool:
         try:
