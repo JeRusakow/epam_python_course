@@ -9,6 +9,11 @@ def test_exception_suppressor_suppresses_exceptions():
         raise TypeError
 
 
+def test_exception_suppressor_suppresses_several_exceptions():
+    with ExceptionSuppressor(TypeError, ValueError, AttributeError):
+        raise AttributeError
+
+
 def test_exception_suppressor_passes_allowed_exceptions():
     with pytest.raises(ValueError):  # noqa: PT012 PT011
         with ExceptionSuppressor(TypeError):
@@ -19,6 +24,11 @@ def test_exception_suppressor_passes_allowed_exceptions():
 def test_suppress_exception_suppresses_exceptions():
     with suppress_exception(TypeError):
         raise TypeError
+
+
+def test_suppress_exception_suppresses_several_exceptions():
+    with suppress_exception(TypeError, ValueError, AttributeError):
+        raise ValueError
 
 
 def test_suppress_exception_passes_allowed_exceptions():

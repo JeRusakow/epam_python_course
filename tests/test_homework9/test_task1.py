@@ -1,26 +1,20 @@
+from pathlib import Path
+
 import pytest
 
 from homework9.task1.hw1 import merge_sorted_files
 
 
 @pytest.fixture(scope="session")
-def temp_files(tmpdir_factory):
-    directory = tmpdir_factory.mktemp("tmp_dir")
-    file_1 = directory.join("file1.txt")
-    file_2 = directory.join("file2.txt")
-    file_3 = directory.join("file3.txt")
-
-    with open(file_1, "w") as f:
-        f.write("1\n4\n9")
-    with open(file_2, "w") as f:
-        f.write("2\n5")
-    with open(file_3, "w") as f:
-        f.write("3\n6\n7\n8")
-
-    return [file_1, file_2, file_3]
+def test_file_dir(tmpdir_factory):
+    return Path("tests/test_data/hw_9/task1")
 
 
-def test_merge_files(temp_files):
+def test_merge_files(test_file_dir):
+    file_1 = test_file_dir / "file1.txt"
+    file_2 = test_file_dir / "file2.txt"
+    file_3 = test_file_dir / "file3.txt"
+
     expected_res = list(range(1, 10))
-    res = list(merge_sorted_files(temp_files))
+    res = list(merge_sorted_files([file_1, file_2, file_3]))
     assert res == expected_res

@@ -1,4 +1,5 @@
 import random
+from pathlib import Path
 
 import pytest
 
@@ -6,64 +7,43 @@ from homework9.task3.hw3 import universal_file_counter
 
 
 @pytest.fixture(scope="session")
-def single_txt_file_directory(tmpdir_factory):
-    directory = tmpdir_factory.mktemp("single_file_dir")
-    filepath = directory.join("file.txt")
-    with open(filepath, "w") as file:
-        file.write("one\ntwo three\nfour")
-
-    return directory
+def test_dir_path():
+    return Path("tests/test_data/hw_9/task3")
 
 
-@pytest.fixture(scope="session")
-def several_txt_files_directory(tmpdir_factory):
-    directory = tmpdir_factory.mktemp("several_files_dir")
-    filenames = ["first.txt", "second.htm", "third.txt"]
-    file_content = [
-        "jeden\ndwa trzy cztere\npięńć sześć",
-        "<html>\n<title>\nNone\n</title>\n</html>",
-        "siedem\nosiem dziewieć\ndziesiąc",
-    ]
-    for filename, content in zip(filenames, file_content):
-        filepath = directory.join(filename)
-        with open(filepath, "w") as file:
-            file.write(content)
-
-    return directory
-
-
-@pytest.fixture(scope="session")
-def empty_directory(tmpdir_factory):
-    return tmpdir_factory.mktemp("empty_dir")
-
-
-def test_dir_does_not_exist():
+def test_dir_does_not_exist(test_dir_path):
     random_dir_name = "".join((chr(random.randint(97, 120)) for _ in range(10)))
-    with pytest.raises(
-        FileNotFoundError, match=f"Path '{random_dir_name}' does not exists"
-    ):
-        universal_file_counter(random_dir_name, "ext")
+    path = test_dir_path / random_dir_name
+    with pytest.raises(FileNotFoundError, match=f"Path '{path}' does not exists"):
+        universal_file_counter(path, "ext")
 
 
-def test_empty_directory(empty_directory):
-    assert universal_file_counter(empty_directory, "ext") == 0
+def test_empty_directory(test_dir_path):
+    path = test_dir_path / "empty_dir"
+    assert universal_file_counter(path, "ext") == 0
 
 
-def test_single_file_no_tokenizer(single_txt_file_directory):
-    assert universal_file_counter(single_txt_file_directory, "txt") == 3
+def test_single_file_no_tokenizer(test_dir_path):
+    path = test_dir_path / "subdir" / "subsubdir"
+    assert universal_file_counter(path, "txt") == 3
 
 
-def test_single_file_with_tokenizer(single_txt_file_directory):
-    assert universal_file_counter(single_txt_file_directory, "txt", str.split) == 4
+def test_single_file_with_tokenizer(test_dir_path):
+    path = test_dir_path / "subdir" / "subsubdir"
+    assert universal_file_counter(path, "txt", str.split) == 5
 
 
-def test_no_satisfying_files(single_txt_file_directory):
-    assert universal_file_counter(single_txt_file_directory, "none") == 0
+def test_no_satisfying_files(test_dir_path):
+    assert universal_file_counter(test_dir_path, "none") == 0
 
 
-def test_several_txt_files_no_tokenizer(several_txt_files_directory):
-    assert universal_file_counter(several_txt_files_directory, "txt") == 6
+def test_several_txt_files_no_tokenizer(test_dir_path):
+    assert universal_file_counter(test_dir_path, "txt") == 6
 
 
-def test_several_txt_files_with_tokenizer(several_txt_files_directory):
-    assert universal_file_counter(several_txt_files_directory, "txt", str.split) == 10
+def test_several_txt_files_with_tokenizer(test_dir_path):
+    assert universal_file_counter(test_dir_path, "txt", str.split) == 10
+
+
+def test_recursive_search(test_dir_path):
+    assert universal_file_counter(test_dir_path, "txt", str.split, recursive=True) == 18

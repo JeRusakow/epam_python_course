@@ -30,26 +30,16 @@ def merge_sorted_files(file_list: List[Union[Path, str]]) -> Iterator:  # noqa: 
         An iterator over int sequence
     """
 
-    def integer_from_file(file: str) -> Generator[int, None, None]:
+    def integer_from_file(file: Path) -> Generator[int, None, None]:
         """Creates int generator for the given file"""
-        with open(file, "r") as f:
-            yield from (int(line) for line in f)
-        yield None
-
-    def find_min(numbers: List[Union[int, None]]) -> Union[int, None]:
-        """A modified min(), because original min() does not support NoneType"""
-        minimum = None
-
-        for num in numbers:
-            if minimum is None or (num is not None and num < minimum):
-                minimum = num
-
-        return minimum
+        with open(file, "r") as file:
+            yield from map(int, file)
+        yield float("inf")
 
     num_generators = [integer_from_file(file) for file in file_list]
     integers = [next(gen) for gen in num_generators]
 
-    while (min_num := find_min(integers)) is not None:
+    while (min_num := min(integers)) != float("inf"):
         yield min_num
         idx = integers.index(min_num)
         integers[idx] = next(num_generators[idx])

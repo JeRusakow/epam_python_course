@@ -21,20 +21,20 @@ class ExceptionSuppressor:
         None
     """
 
-    def __init__(self, exception_type: Type[BaseException]):
+    def __init__(self, *exception_type: Type[BaseException]):
         self.exception_type = exception_type
 
     def __enter__(self):
         return None
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if exc_type == self.exception_type:
+        if exc_type in self.exception_type:
             return True
         raise
 
 
 @contextmanager
-def suppress_exception(exception_type: Type[BaseException]) -> None:
+def suppress_exception(*exception_type: Type[BaseException]) -> None:
     """
     Exception suppressing context manager.
 
