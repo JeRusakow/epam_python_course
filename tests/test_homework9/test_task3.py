@@ -11,6 +11,11 @@ def test_dir_path():
     return Path("tests/test_data/hw_9/task3")
 
 
+@pytest.fixture(scope="session")
+def empty_directory(tmpdir_factory):
+    return Path(tmpdir_factory.mktemp("empty_dir"))
+
+
 def test_dir_does_not_exist(test_dir_path):
     random_dir_name = "".join((chr(random.randint(97, 120)) for _ in range(10)))
     path = test_dir_path / random_dir_name
@@ -18,9 +23,8 @@ def test_dir_does_not_exist(test_dir_path):
         universal_file_counter(path, "ext")
 
 
-def test_empty_directory(test_dir_path):
-    path = test_dir_path / "empty_dir"
-    assert universal_file_counter(path, "ext") == 0
+def test_empty_directory(empty_directory):
+    assert universal_file_counter(empty_directory, "*") == 0
 
 
 def test_single_file_no_tokenizer(test_dir_path):
