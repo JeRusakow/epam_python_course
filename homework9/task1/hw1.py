@@ -14,6 +14,7 @@ file2.txt:
 >>> list(merge_sorted_files(["file1.txt", "file2.txt"]))
 [1, 2, 3, 4, 5, 6]
 """
+import heapq
 from pathlib import Path
 from typing import Generator, Iterator, List, Union
 
@@ -30,18 +31,21 @@ def merge_sorted_files(file_list: List[Union[Path, str]]) -> Iterator:  # noqa: 
         An iterator over int sequence
     """
 
-    def integer_from_file(file: Path) -> Generator[int, None, None]:
+    def integer_from_file(file: str) -> Generator[int, None, None]:
         """Creates int generator for the given file"""
         with open(file, "r") as file:
             yield from map(int, file)
         yield float("inf")
 
-    num_generators = [integer_from_file(file) for file in file_list]
-    integers = [next(gen) for gen in num_generators]
+    gen_list = [integer_from_file(file) for file in file_list]
+    # gen_idx is necessary for a case when values from generator are the same
+    values_list = [(next(gen), gen_idx) for gen_idx, gen in enumerate(gen_list)]
 
-    while (min_num := min(integers)) != float("inf"):
-        yield min_num
-        idx = integers.index(min_num)
-        integers[idx] = next(num_generators[idx])
+    heapq.heapify(values_list)
+
+    while values_list[0][0] != float("inf"):
+        val, gen_idx = heapq.heappop(values_list)
+        heapq.heappush(values_list, (next(gen_list[gen_idx]), gen_idx))
+        yield val
 
     return
