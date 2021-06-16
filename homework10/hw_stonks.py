@@ -10,6 +10,10 @@ from bs4 import BeautifulSoup
 
 
 class SnP500Parser:
+    """
+    A class for parsing S&P500 companies data
+    """
+
     def __init__(self):
         self.base_url = "https://markets.businessinsider.com"
         self.snp500_url = "https://markets.businessinsider.com/index/components/s&p_500"
@@ -21,6 +25,7 @@ class SnP500Parser:
 
     @staticmethod
     def get_rouble_to_dollar_ratio() -> float:
+        """An utility to get the current RUB/USD ratio"""
         xml = requests.get("https://www.cbr.ru/scripts/XML_daily.asp").content
         soup = BeautifulSoup(xml, "xml")
         (ratio,) = soup.find("Valute", ID="R01235").Value.contents
@@ -34,6 +39,7 @@ class SnP500Parser:
             return await response.text()
 
     async def get_pages(self, urls: Iterable) -> Collection[str]:
+        """Downloads a bunch of HTMP pages from given URLs"""
         async with aiohttp.ClientSession() as session:
             return await asyncio.gather(
                 *[self.get_html_page_from_url(url, session) for url in urls]
@@ -74,6 +80,18 @@ class SnP500Parser:
             yield {"url": full_url, "yearly_change": yearly_change}
 
     def parse_company_page(self, page: str) -> defaultdict:  # noqa: CCR001
+        """
+        Parses a company information from its page.
+        Info of interest are company's name, code, current action price, P/E ratio
+        and max possible profit from buying an action on 52-Week Low and selling it
+        on 52-Week High. If P/E or max profit are absent, their value is zero.
+
+        Args:
+            page: a company's page content
+
+        Returns:
+            A defaultdict of company's 'name', 'price', 'code', 'P/E', 'max_profit'
+        """
         soup = BeautifulSoup(page, "html.parser")
         data = defaultdict(None)
 
@@ -124,6 +142,7 @@ class SnP500Parser:
         return data
 
     async def parse_companies_async(self):
+        """Main S&P500 site parsing routine"""
         self.usd_rub_ratio = self.get_rouble_to_dollar_ratio()
 
         (page,) = await self.get_pages([self.snp500_url])
@@ -141,10 +160,20 @@ class SnP500Parser:
             self.cmp_list[idx] = {**self.cmp_list[idx], **data}
 
     def parse_snp500(self):
+        """A routine to be called from outside to start parsing"""
         event_loop = asyncio.get_event_loop()
         event_loop.run_until_complete(self.parse_companies_async())
 
     def take_top10_rating(self, param: str, desc=True) -> List[Dict]:
+        """
+        Takes top 10 copanies with highest of lowest value of 'param'.
+        Args:
+            param: A parameter of comparison
+            desc: True, if top 10 highest is needed, False otherwise
+
+        Returns:
+            List of 10 selected top companies
+        """
         cmp_top = sorted(self.cmp_list, key=lambda x: x[param], reverse=desc)[:10]
         return [
             {"code": cmp["code"], "name": cmp["name"], param: cmp[param]}
