@@ -1,5 +1,6 @@
 import asyncio
 import json
+import multiprocessing as mp
 from collections import defaultdict
 from itertools import chain
 from typing import Collection, Dict, Iterable, List
@@ -155,9 +156,10 @@ class SnP500Parser:
 
         cmp_pages = await self.get_pages((cmp["url"] for cmp in self.cmp_list))
 
-        for idx, cmp_page in enumerate(cmp_pages):
-            data = self.parse_company_page(cmp_page)
-            self.cmp_list[idx] = {**self.cmp_list[idx], **data}
+        with mp.Pool() as pool:
+            cmp_data = pool.map(self.parse_company_page, cmp_pages)
+            for idx, data in enumerate(cmp_data):
+                self.cmp_list[idx] = {**self.cmp_list[idx], **data}
 
     def parse_snp500(self):
         """A routine to be called from outside to start parsing"""
