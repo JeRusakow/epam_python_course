@@ -151,8 +151,8 @@ class SnP500Parser:
 
         cmp_list_pages = await self.get_pages(self.pages_urls)
 
-        cmp_map = map(self.parse_company_list, cmp_list_pages)
-        self.cmp_list = list(chain.from_iterable(cmp_map))
+        # chain list construction is inevitable due to needed cmp_list structure
+        self.cmp_list = list(chain(*map(self.parse_company_list, cmp_list_pages)))
 
         cmp_pages = await self.get_pages((cmp["url"] for cmp in self.cmp_list))
 
@@ -163,8 +163,7 @@ class SnP500Parser:
 
     def parse_snp500(self):
         """A routine to be called from outside to start parsing"""
-        event_loop = asyncio.get_event_loop()
-        event_loop.run_until_complete(self.parse_companies_async())
+        asyncio.run(self.parse_companies_async())
 
     def take_top10_rating(self, param: str, desc=True) -> List[Dict]:
         """
